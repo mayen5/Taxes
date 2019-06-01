@@ -18,6 +18,10 @@ namespace Taxes.Models
             base.Dispose(disposing);
         }
 
-        public System.Data.Entity.DbSet<Taxes.Models.PropertyType> PropertyTypes { get; set; }
+        public DbSet<PropertyType> PropertyTypes { get; set; }
+
+        public System.Data.Entity.DbSet<Taxes.Models.Department> Departments { get; set; }
+
+        public System.Data.Entity.DbSet<Taxes.Models.Municipality> Municipalities { get; set; }
     }
 }

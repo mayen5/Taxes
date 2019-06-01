@@ -17,7 +17,7 @@ namespace Taxes.Controllers
         // GET: PropertyTypes
         public ActionResult Index()
         {
-            return View(db.PropertyTypes.ToList());
+            return View(db.PropertyTypes.OrderBy(pt => pt.Description).ToList());
         }
 
         // GET: PropertyTypes/Details/5
@@ -51,7 +51,27 @@ namespace Taxes.Controllers
             if (ModelState.IsValid)
             {
                 db.PropertyTypes.Add(propertyType);
-                db.SaveChanges();
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null && 
+                        ex.InnerException.InnerException != null &&
+                        ex.InnerException.InnerException.Message.Contains("Index")) 
+                    {
+                        ModelState.AddModelError(String.Empty, "The are a record with the same description");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(String.Empty, ex.Message);
+                    }
+                    
+                    return View(propertyType);
+                }
+
                 return RedirectToAction("Index");
             }
 
@@ -83,7 +103,26 @@ namespace Taxes.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(propertyType).State = EntityState.Modified;
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null &&
+                        ex.InnerException.InnerException != null &&
+                        ex.InnerException.InnerException.Message.Contains("Index"))
+                    {
+                        ModelState.AddModelError(String.Empty, "The are a record with the same description");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(String.Empty, ex.Message);
+                    }
+
+                    return View(propertyType);
+                }
+
                 return RedirectToAction("Index");
             }
             return View(propertyType);
@@ -96,7 +135,9 @@ namespace Taxes.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PropertyType propertyType = db.PropertyTypes.Find(id);
+
+            var propertyType = db.PropertyTypes.Find(id);
+
             if (propertyType == null)
             {
                 return HttpNotFound();

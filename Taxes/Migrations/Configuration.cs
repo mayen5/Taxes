@@ -9,8 +9,8 @@ namespace Taxes.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
-            ContextKey = "Taxes.Models.TaxesContext";
+            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(Taxes.Models.TaxesContext context)
