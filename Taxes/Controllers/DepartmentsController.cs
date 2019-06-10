@@ -10,9 +10,67 @@ using Taxes.Models;
 
 namespace Taxes.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class DepartmentsController : Controller
     {
         private TaxesContext db = new TaxesContext();
+
+        public ActionResult AddMunicipality(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var department = db.Departments.Find(id);
+
+            if (department == null)
+            {
+                return HttpNotFound();
+            }
+
+            var view = new Municipality
+            {
+                DepartmentId = department.DepartmentId
+            };
+
+            return View(view);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddMunicipality(Municipality view)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Municipalities.Add(view);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null &&
+                        ex.InnerException.InnerException != null &&
+                        ex.InnerException.InnerException.Message.Contains("Index"))
+                    {
+                        ModelState.AddModelError(String.Empty, "The are a record with the same name");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(String.Empty, ex.Message);
+                    }
+
+                    return View(view);
+
+                }
+
+                return RedirectToAction(String.Format("Details/{0}", view.DepartmentId));
+            }
+
+            return View(view);
+
+        }
 
         // GET: Departments
         public ActionResult Index()
@@ -27,12 +85,22 @@ namespace Taxes.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Department department = db.Departments.Find(id);
+
+            var department = db.Departments.Find(id);
+
             if (department == null)
             {
                 return HttpNotFound();
             }
-            return View(department);
+
+            var view = new DepartmentView
+            {
+                DepartmentId = department.DepartmentId,
+                MunicipalityList = department.Municipalities.OrderBy(m => m.Name).ToList(),
+                Name = department.Name
+            };
+
+            return View(view);
         }
 
         // GET: Departments/Create
@@ -109,9 +177,25 @@ namespace Taxes.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Department department = db.Departments.Find(id);
+            var department = db.Departments.Find(id);
             db.Departments.Remove(department);
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                {
+                    ModelState.AddModelError(string.Empty, "The record can't be deleted because has related records");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+                return View(department);
+            }
             return RedirectToAction("Index");
         }
 
@@ -123,5 +207,6 @@ namespace Taxes.Controllers
             }
             base.Dispose(disposing);
         }
+
     }
 }

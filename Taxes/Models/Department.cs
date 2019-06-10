@@ -20,5 +20,7 @@ namespace Taxes.Models
         public String Name { get; set; }
 
         public virtual ICollection<Municipality> Municipalities { get; set; }
+        public virtual ICollection<Taxpayer> Taxpayers { get; set; }
+
     }
 }

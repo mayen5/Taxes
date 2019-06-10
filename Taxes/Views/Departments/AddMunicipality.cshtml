@@ -1,20 +1,22 @@
-﻿@model Taxes.Models.Department
+﻿@model Taxes.Models.Municipality
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Add Municipality";
 }
 
-<h2>Create</h2>
+<h2>Add Municipality to Department</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Department</h4>
+        <h4>Municipality</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.DepartmentId)
+
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -25,10 +27,8 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                @Html.ActionLink("Back to List", "Index",new { }, new { @class = "btn btn-success"})
-
-
+                <input type="submit" value="Save" class="btn btn-primary" />
+                @Html.ActionLink("Back to Details", "Details", new {id = Model.DepartmentId }, new { @class = "btn btn-success" })
             </div>
         </div>
     </div>
@@ -37,4 +37,3 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-

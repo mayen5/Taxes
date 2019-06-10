@@ -25,15 +25,32 @@
                     <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
                     <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
                     <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin Options<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Departments", "Index", "Departments")</li>
-                            <li>@Html.ActionLink("Document Types", "Index", "DocumentTypes")</li>
-                            <li>@Html.ActionLink("Municipalities", "Index", "Municipalities")</li>
-                            <li>@Html.ActionLink("Property Types", "Index", "PropertyTypes")</li>
-                        </ul>
-                    </li>                    
+
+                    @if (this.User.IsInRole("Admin"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin Options<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Departments", "Index", "Departments")</li>
+                                <li>@Html.ActionLink("Document Types", "Index", "DocumentTypes")</li>
+                                <li>@Html.ActionLink("Municipalities", "Index", "Municipalities")</li>
+                                <li>@Html.ActionLink("Property Types", "Index", "PropertyTypes")</li>
+                                <li>@Html.ActionLink("Taxpayers", "Index", "Taxpayers")</li>
+                            </ul>
+                        </li>
+                    }
+                        
+                    @if (this.User.IsInRole("Taxpayer"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Taxpayer Options<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("My Settings", "Index", "Departments")</li>
+                                <li>@Html.ActionLink("My Taxes", "Index", "DocumentTypes")</li>
+                                <li>@Html.ActionLink("My Tickets", "Index", "Municipalities")</li>
+                            </ul>
+                        </li>
+                    }                
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
