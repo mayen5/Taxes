@@ -16,11 +16,76 @@ namespace Taxes.Controllers
     {
         private TaxesContext db = new TaxesContext();
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddProperty(Property view)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Properties.Add(view);
+                try
+                {
+                    db.SaveChanges();
+
+                }
+                catch (Exception ex)
+                {
+                    //TODO: Catch Errors to improve the messages
+                    this.ReturnView(view, ex.Message);
+                    return View(view);
+                }
+                return RedirectToAction(String.Format("Details/{0}", view.TaxpayerId));
+
+            }
+
+            this.ReturnView(view, String.Empty);
+            return View(view);
+
+        }
+
+        private void ReturnView(Property view, string error)
+        {
+            if (!String.IsNullOrEmpty(error))
+            {
+                ModelState.AddModelError(String.Empty, error);
+            }
+
+            ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "Name", view.DepartmentId);
+            ViewBag.MunicipalityId = new SelectList(db.Municipalities
+                .Where(m => m.DepartmentId == view.DepartmentId)
+                .OrderBy(m => m.Name), "MunicipalityId", "Name", view.MunicipalityId);
+            ViewBag.DocumentTypeId = new SelectList(db.PropertyTypes, "PropertyTypeId", "Description", view.PropertyTypeId);
+
+        }
+
+        [HttpGet]
+        public ActionResult AddProperty(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var view = new Property
+            {
+                TaxpayerId = id.Value,
+
+            };
+
+            ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "Name");
+            ViewBag.MunicipalityId = new SelectList(db.Municipalities
+                .Where(m => m.DepartmentId == db.Departments.FirstOrDefault().DepartmentId)
+                .OrderBy(m => m.Name), "MunicipalityId", "Name");
+            ViewBag.PropertyTypeId = new SelectList(db.PropertyTypes, "PropertyTypeId", "Description");
+
+            return View(view);
+        }
+
         // GET: Taxpayers
         public ActionResult Index()
         {
-            var taxPaers = db.TaxPaers.Include(t => t.Department).Include(t => t.DocumentType).Include(t => t.Municipality);
-            return View(taxPaers.ToList());
+            var taxpayers = db.Taxpayers.Include(t => t.Department).Include(t => t.DocumentType).Include(t => t.Municipality).Include(p => p.Properties).ToList();
+            return View(taxpayers.ToList());
         }
 
         // GET: Taxpayers/Details/5
@@ -30,7 +95,9 @@ namespace Taxes.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Taxpayer taxpayer = db.TaxPaers.Find(id);
+            Taxpayer taxpayer = db.Taxpayers.Find(id);
+
+            taxpayer.Properties.OrderBy(p => p.Department.Name).ThenBy(p => p.Municipality.Name).ThenBy(p => p.PropertyType.Description).ThenBy(p => p.Address);
             if (taxpayer == null)
             {
                 return HttpNotFound();
@@ -58,7 +125,7 @@ namespace Taxes.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.TaxPaers.Add(taxpayer);
+                db.Taxpayers.Add(taxpayer);
                 try
                 {
                     db.SaveChanges();
@@ -92,7 +159,7 @@ namespace Taxes.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Taxpayer taxpayer = db.TaxPaers.Find(id);
+            Taxpayer taxpayer = db.Taxpayers.Find(id);
             if (taxpayer == null)
             {
                 return HttpNotFound();
@@ -133,7 +200,7 @@ namespace Taxes.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Taxpayer taxpayer = db.TaxPaers.Find(id);
+            Taxpayer taxpayer = db.Taxpayers.Find(id);
             if (taxpayer == null)
             {
                 return HttpNotFound();
@@ -146,8 +213,8 @@ namespace Taxes.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Taxpayer taxpayer = db.TaxPaers.Find(id);
-            db.TaxPaers.Remove(taxpayer);
+            Taxpayer taxpayer = db.Taxpayers.Find(id);
+            db.Taxpayers.Remove(taxpayer);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

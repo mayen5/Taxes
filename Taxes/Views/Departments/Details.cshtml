@@ -10,6 +10,7 @@
 
         <div>
             <h4>Department</h4>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <hr />
             <dl class="dl-horizontal">
                 <dt>
@@ -51,7 +52,12 @@
                             @Html.DisplayFor(modelItem => modelItem.MunicipalityList[i].Name)
                         </td>
                         <td>
-                            @Html.ActionLink("Delete", "Delete", new { id = Model.MunicipalityList[i].MunicipalityId }, new { @class = "btn btn-danger" })
+                            @Html.ActionLink("Edit", "EditMunicipality", 
+                                new { municipalityId = Model.MunicipalityList[i].MunicipalityId, departmentId = Model.DepartmentId }, 
+                                new { @class = "btn btn-warning" })
+                            @Html.ActionLink("Delete", "DeleteMunicipality", 
+                                new { id = Model.MunicipalityList[i].MunicipalityId }, 
+                                new { @class = "btn btn-danger", onclick = "return confirm('Are you sure to delete this record?')" })
                         </td>
                     </tr>
                 }

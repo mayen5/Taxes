@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Taxes.Models
+﻿namespace Taxes.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     public class PropertyType
     {
         [Key]
@@ -18,6 +18,9 @@ namespace Taxes.Models
 
         [DataType(DataType.MultilineText)]
         public String Notes { get; set; }
+
+        public virtual ICollection<Property> Properties { get; set; }
+
 
     }
 }

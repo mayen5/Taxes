@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Data.Entity;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -15,6 +16,7 @@ namespace Taxes
         protected void Application_Start()
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<TaxesContext, Configuration>());
+            //GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             this.CheckRoles();
             Utilities.CheckSuperUser();
             AreaRegistration.RegisterAllAreas();

@@ -15,6 +15,76 @@ namespace Taxes.Controllers
     {
         private TaxesContext db = new TaxesContext();
 
+        [HttpPost]
+        public ActionResult EditMunicipality(Municipality view)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(view).State = EntityState.Modified;
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+
+                    ModelState.AddModelError(String.Empty, ex.Message);
+                    return View(view);
+                }
+
+                return RedirectToAction(String.Format("Details/{0}", view.DepartmentId));
+            }
+
+            return View(view);
+        }
+
+        public ActionResult EditMunicipality(int? municipalityId, int? departmentId)
+        {
+            if (municipalityId == null || departmentId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var municipality = db.Municipalities.Find(municipalityId);
+
+            if (municipality == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(municipality);
+        }
+
+        public ActionResult DeleteMunicipality(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var municipality = db.Municipalities.Find(id);
+
+            if (municipality == null)
+            {
+                return HttpNotFound();
+            }
+
+            db.Municipalities.Remove(municipality);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError(string.Empty, ex.Message);
+
+            }
+
+            return RedirectToAction(String.Format("Details/{0}", municipality.DepartmentId));
+        }
+
         public ActionResult AddMunicipality(int? id)
         {
             if (id == null)
@@ -75,8 +145,21 @@ namespace Taxes.Controllers
         // GET: Departments
         public ActionResult Index()
         {
-            return View(db.Departments.ToList());
+            var departments = db.Departments.ToList();
+            var views = new List<DepartmentView>();
+            foreach (var department in departments)
+            {
+                var view = new DepartmentView
+                {
+                    DepartmentId = department.DepartmentId,
+                    MunicipalityList = department.Municipalities.ToList(),
+                    Name = department.Name,
+                };
+                views.Add(view);
+            }
+            return View(views);
         }
+
 
         // GET: Departments/Details/5
         public ActionResult Details(int? id)

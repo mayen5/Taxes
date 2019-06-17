@@ -7,7 +7,7 @@
     {
         public TaxesContext() : base("DefaultConnection")
         {
-
+         
         }
 
         protected override void Dispose(bool disposing)
@@ -29,6 +29,8 @@
 
         public DbSet<DocumentType> DocumentTypes { get; set; }
 
-        public DbSet<Taxpayer> TaxPaers { get; set; }
+        public DbSet<Taxpayer> Taxpayers { get; set; }
+
+        public DbSet<Property> Properties { get; set; }
     }
 }

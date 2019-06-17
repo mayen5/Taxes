@@ -7,18 +7,12 @@
 <h2>Taxpayers</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create", new { }, new { @class = "btn btn-primary"})
+    @Html.ActionLink("Create New", "Create", new { }, new { @class = "btn btn-primary" })
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Department)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.DocumentType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Municipality)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FirstName)
@@ -33,49 +27,44 @@
             @Html.DisplayNameFor(model => model.Phone)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Address)
+            @Html.DisplayNameFor(model => model.Document)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Document)
+            # Properties
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Department.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DocumentType.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Municipality.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Phone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Address)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Document)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.TaxpayerId }, new { @class = "btn btn-warning btn-sm" })
-            @Html.ActionLink("Details", "Details", new { id=item.TaxpayerId }, new { @class = "btn btn-info btn-sm" })
-            @Html.ActionLink("Delete", "Delete", new { id=item.TaxpayerId }, new { @class = "btn btn-danger btn-sm" })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DocumentType.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Document)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Properties.ToList().Count)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.TaxpayerId }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Details", "Details", new { id = item.TaxpayerId }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.TaxpayerId }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
 
 </table>

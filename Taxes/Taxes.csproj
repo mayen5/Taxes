@@ -209,6 +209,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Municipality.cs" />
+    <Compile Include="Models\Property.cs" />
     <Compile Include="Models\PropertyType.cs" />
     <Compile Include="Models\TaxesContext.cs" />
     <Compile Include="Models\Taxpayer.cs" />
@@ -306,6 +307,8 @@
     <Content Include="Views\Taxpayers\Edit.cshtml" />
     <Content Include="Views\Taxpayers\Index.cshtml" />
     <Content Include="Views\Departments\AddMunicipality.cshtml" />
+    <Content Include="Views\Departments\EditMunicipality.cshtml" />
+    <Content Include="Views\Taxpayers\AddProperty.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

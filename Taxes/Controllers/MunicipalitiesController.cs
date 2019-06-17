@@ -102,7 +102,7 @@ namespace Taxes.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Municipality municipality = db.Municipalities.Find(id);
+            var municipality = db.Municipalities.Find(id);
             if (municipality == null)
             {
                 return HttpNotFound();
@@ -115,9 +115,26 @@ namespace Taxes.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Municipality municipality = db.Municipalities.Find(id);
+            var municipality = db.Municipalities.Find(id);
             db.Municipalities.Remove(municipality);
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                {
+                    ModelState.AddModelError(string.Empty, "The record can't be deleted because has related records");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+
+                return View(municipality);
+            }
             return RedirectToAction("Index");
         }
 
