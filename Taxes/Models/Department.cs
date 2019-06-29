@@ -16,7 +16,7 @@ namespace Taxes.Models
         [Index("Department_Name_Index", IsUnique = true)]
         [StringLength(30, ErrorMessage = "The field {0} can contain maximun {1} and minimum {2} characters",
             MinimumLength = 1)]
-        [Display(Name = "Departament Name")]
+        [Display(Name = "Departament")]
         public String Name { get; set; }
 
         public virtual ICollection<Municipality> Municipalities { get; set; }

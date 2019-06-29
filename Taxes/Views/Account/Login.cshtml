@@ -41,21 +41,19 @@
                         <input type="submit" value="Iniciar sesión" class="btn btn-default" />
                     </div>
                 </div>
+
+                @* Habilite esta opción después de habilitar la confirmación de la cuenta para la función de restablecimiento de contraseña*@
                 <p>
-                    @Html.ActionLink("Registrar como nuevo usuario", "Register")
+                    @Html.ActionLink("¿Ha olvidado su contraseña?", "ForgotPassword")
                 </p>
-                @* Habilite esta opción después de habilitar la confirmación de la cuenta para la función de restablecimiento de contraseña
-                    <p>
-                        @Html.ActionLink("¿Ha olvidado su contraseña?", "ForgotPassword")
-                    </p>*@
             }
         </section>
     </div>
-    <div class="col-md-4">
+    @*<div class="col-md-4">
         <section id="socialLoginForm">
             @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
         </section>
-    </div>
+    </div>*@
 </div>
 
 @section Scripts {

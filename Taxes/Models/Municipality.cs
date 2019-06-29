@@ -17,7 +17,7 @@
         //[Index("Municipality_Name_Index", IsUnique = true)]
         [StringLength(255, ErrorMessage = "The field {0} can contain maximun {1} and minimum {2} characters",
             MinimumLength = 1)]
-        [Display(Name = "Municipality Name")]
+        [Display(Name = "Municipality")]
         public String Name { get; set; }
 
         public virtual Department Department { get; set; }

@@ -11,10 +11,119 @@ using Taxes.Models;
 
 namespace Taxes.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class TaxpayersController : Controller
     {
         private TaxesContext db = new TaxesContext();
+
+        [Authorize(Roles = "Taxpayer")]
+        public ActionResult MyTaxes()
+        {
+            var taxpayer = db.Taxpayers.Where(t => t.UserName == this.User.Identity.Name).FirstOrDefault();
+
+            decimal total = 0;
+
+            foreach (var property in taxpayer.Properties.ToList())
+            {
+                foreach (var taxProperty in property.TaxProperties.ToList())
+                {
+                    if (taxProperty.IsPay)
+                    {
+                        property.TaxProperties.Remove(taxProperty);
+                    }
+                    else
+                    {
+                        total += taxProperty.Value;
+                    }
+                }
+            }
+
+            var view = new TaxpayerWithTotal
+            {
+                Taxpayer = taxpayer,
+                Total = total,
+            };
+
+            return View(view);
+        }
+
+
+
+        [Authorize(Roles = "Taxpayer")]
+        public ActionResult MyProperties()
+        {
+            var taxpayer = db.Taxpayers.Where(t => t.UserName == this.User.Identity.Name).FirstOrDefault();
+
+            if (taxpayer != null)
+            {
+                
+                return View(taxpayer.Properties);
+
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize(Roles = "Taxpayer")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MySettings(Taxpayer taxpayer)
+        {
+            if (ModelState.IsValid)
+            {
+
+                db.Entry(taxpayer).State = EntityState.Modified;
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    //TODO: Improve message
+                    ModelState.AddModelError(String.Empty, ex.Message);
+                    ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "Name", taxpayer.DepartmentId);
+                    ViewBag.DocumentTypeId = new SelectList(db.DocumentTypes, "DocumentTypeId", "Description", taxpayer.DocumentTypeId);
+                    ViewBag.MunicipalityId = new SelectList(db.Municipalities
+                        .Where(m => m.DepartmentId == db.Departments.FirstOrDefault().DepartmentId)
+                        .OrderBy(m => m.Name), "MunicipalityId", "Name", taxpayer.MunicipalityId);
+                    return View(taxpayer);
+                }
+                return RedirectToAction("Index", "Home");
+
+
+            }
+
+            ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "Name", taxpayer.DepartmentId);
+            ViewBag.DocumentTypeId = new SelectList(db.DocumentTypes, "DocumentTypeId", "Description", taxpayer.DocumentTypeId);
+            ViewBag.MunicipalityId = new SelectList(db.Municipalities
+                .Where(m => m.DepartmentId == taxpayer.DepartmentId)
+                .OrderBy(m => m.Name), "MunicipalityId", "Name", taxpayer.MunicipalityId);
+
+            return View(taxpayer);
+
+        }
+
+        [Authorize(Roles = "Taxpayer")]
+        public ActionResult MySettings()
+        {
+            var taxpayer = db.Taxpayers.Where(t => t.UserName == this.User.Identity.Name).FirstOrDefault();
+
+            if (taxpayer != null)
+            {
+                ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "Name", taxpayer.DepartmentId);
+                ViewBag.DocumentTypeId = new SelectList(db.DocumentTypes, "DocumentTypeId", "Description", taxpayer.DocumentTypeId);
+                ViewBag.MunicipalityId = new SelectList(db.Municipalities
+                    .Where(m => m.DepartmentId == taxpayer.DepartmentId)
+                    .OrderBy(m => m.Name), "MunicipalityId", "Name", taxpayer.MunicipalityId);
+
+                return View(taxpayer);
+
+            }
+
+            return RedirectToAction("Index", "Home");
+
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -58,6 +167,7 @@ namespace Taxes.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public ActionResult AddProperty(int? id)
         {
@@ -82,6 +192,7 @@ namespace Taxes.Controllers
         }
 
         // GET: Taxpayers
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             var taxpayers = db.Taxpayers.Include(t => t.Department).Include(t => t.DocumentType).Include(t => t.Municipality).Include(p => p.Properties).ToList();
@@ -89,6 +200,7 @@ namespace Taxes.Controllers
         }
 
         // GET: Taxpayers/Details/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -106,6 +218,7 @@ namespace Taxes.Controllers
         }
 
         // GET: Taxpayers/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewBag.DepartmentId = new SelectList(db.Departments, "DepartmentId", "Name");
@@ -153,6 +266,7 @@ namespace Taxes.Controllers
         }
 
         // GET: Taxpayers/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -194,6 +308,7 @@ namespace Taxes.Controllers
         }
 
         // GET: Taxpayers/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)

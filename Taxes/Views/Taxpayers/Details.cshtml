@@ -5,7 +5,7 @@
 }
 
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-4">
         <h2>Details</h2>
 
         <div>
@@ -92,7 +92,7 @@
             @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-success" })
         </p>
     </div>
-    <div class="col-md-7">
+    <div class="col-md-8">
         <h2>Properties</h2>
         @if (Model.Properties.Count == 0)
         {
@@ -105,39 +105,51 @@
             <table class="table">
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Department)
+                        @Html.DisplayNameFor(model => model.Properties.FirstOrDefault().Department.Name)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Municipality)
+                        @Html.DisplayNameFor(model => model.Properties.FirstOrDefault().Municipality.Name)
                     </th>
                     <th>
-                        Property Type
+                        @Html.DisplayNameFor(model => model.Properties.FirstOrDefault().PropertyType.Description)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Properties)
+                        @Html.DisplayNameFor(model => model.Properties.FirstOrDefault().Stratum)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Properties.FirstOrDefault().Area)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Properties.FirstOrDefault().Value)
                     </th>
                     <th></th>
                 </tr>
 
-                @for (int i = 0; i < Model.Properties.Count; i++)
+                @foreach (var item in Model.Properties.ToList())
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => modelItem.Department.Name)
+                            @Html.DisplayFor(modelItem => item.Department.Name)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => modelItem.Municipality.Name)
+                            @Html.DisplayFor(modelItem => item.Municipality.Name)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => modelItem.Properties[i].PropertyType.Description)
+                            @Html.DisplayFor(modelItem => item.PropertyType.Description)
+                        </td>
+                        <td align="right">
+                            @Html.DisplayFor(modelItem => item.Stratum)
+                        </td>
+                        <td align="right">
+                            @Html.DisplayFor(modelItem => item.Area)
+                        </td>
+                        <td align="right">
+                            @Html.DisplayFor(modelItem => item.Value)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => modelItem.Properties[i].Address))
-                        </td>
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = Model.TaxpayerId }, new { @class = "btn btn-warning" })
-                            @Html.ActionLink("Details", "Details", new { id = Model.TaxpayerId }, new { @class = "btn btn-info" })
-                            @Html.ActionLink("Delete", "Delete", new { id = Model.TaxpayerId }, new { @class = "btn btn-danger" })
+                            @Html.ActionLink("Edit", "EditProperty", new { id = item.PropertyId }, new { @class = "btn btn-warning btn-sm" })
+                            @Html.ActionLink("Taxes", "ShowTaxes", new { id = item.PropertyId }, new { @class = "btn btn-info btn-sm" })
+                            @Html.ActionLink("Delete", "DeleteProperty", new { id = item.PropertyId }, new { @class = "btn btn-danger btn-sm" })
                         </td>
                     </tr>
                 }

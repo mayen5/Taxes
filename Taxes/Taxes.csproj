@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -185,6 +186,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MunicipalitiesController.cs" />
     <Compile Include="Controllers\PropertyTypesController.cs" />
+    <Compile Include="Controllers\TaxesController.cs" />
     <Compile Include="Controllers\TaxpayersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -211,8 +213,11 @@
     <Compile Include="Models\Municipality.cs" />
     <Compile Include="Models\Property.cs" />
     <Compile Include="Models\PropertyType.cs" />
+    <Compile Include="Models\Tax.cs" />
     <Compile Include="Models\TaxesContext.cs" />
     <Compile Include="Models\Taxpayer.cs" />
+    <Compile Include="Models\TaxpayerWithTotal.cs" />
+    <Compile Include="Models\TaxProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -233,6 +238,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="Properties\PublishProfiles\TaxesMayen - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -309,6 +315,16 @@
     <Content Include="Views\Departments\AddMunicipality.cshtml" />
     <Content Include="Views\Departments\EditMunicipality.cshtml" />
     <Content Include="Views\Taxpayers\AddProperty.cshtml" />
+    <Content Include="Views\Taxpayers\MySettings.cshtml" />
+    <Content Include="Views\Taxpayers\MyProperties.cshtml" />
+    <Content Include="Views\Taxes\Create.cshtml" />
+    <Content Include="Views\Taxes\Delete.cshtml" />
+    <Content Include="Views\Taxes\Details.cshtml" />
+    <Content Include="Views\Taxes\Edit.cshtml" />
+    <Content Include="Views\Taxes\Index.cshtml" />
+    <Content Include="Views\Taxes\Success.cshtml" />
+    <Content Include="Views\Taxes\Fail.cshtml" />
+    <Content Include="Views\Taxpayers\MyTaxes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
