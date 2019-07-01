@@ -4,14 +4,15 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
-    public class Taxpayer
+    using System.Linq;
+    using System.Web;
+    public class Employee
     {
         [Key]
-        public int TaxpayerId { get; set; }
+        public int EmployeeId { get; set; }
 
         [Required(ErrorMessage = "You must enter a {0}")]
-        [StringLength(30, 
+        [StringLength(30,
             ErrorMessage = "The field {0} can contain maximun {1} and minimum {2} characters",
             MinimumLength = 2)]
         [Display(Name = "First name")]
@@ -30,7 +31,7 @@
             MinimumLength = 7)]
         [Display(Name = "E-mail")]
         [DataType(DataType.EmailAddress)]
-        [Index("Taxpayer_UserName_Index", IsUnique = true)]
+        [Index("Employee_UserName_Index", IsUnique = true)]
         public String UserName { get; set; }
 
         [StringLength(20,
@@ -60,13 +61,20 @@
         [Index("Taxpayer_Document_Index", IsUnique = true)]
         public String Document { get; set; }
 
+        public int? BossId { get; set; }
+
+        [Display(Name = "Full name")]
+        public String FullName { get {return String.Format("{0} {1}", this.FirstName, this.LastName) ; } }
+
         public virtual Department Department { get; set; }
 
         public virtual Municipality Municipality { get; set; }
 
         public virtual DocumentType DocumentType { get; set; }
 
-        public virtual IList<Property> Properties { get; set; }
-        
+        public virtual Employee Boss { get; set; }
+
+        public virtual List<Employee> Employees { get; set; }
+
     }
 }

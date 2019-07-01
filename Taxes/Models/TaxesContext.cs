@@ -18,6 +18,11 @@
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
+            modelBuilder.Entity<Employee>()
+                .HasOptional(x => x.Boss)
+                .WithMany(x => x.Employees)
+                .HasForeignKey(x => x.BossId);
         }
 
 
@@ -37,5 +42,6 @@
 
         public DbSet<TaxProperty> TaxProperties { get; set; }
 
+        public DbSet<Taxes.Models.Employee> Employees { get; set; }
     }
 }

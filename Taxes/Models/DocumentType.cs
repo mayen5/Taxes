@@ -16,6 +16,8 @@
         public String Description { get; set; }
 
         public virtual ICollection<Taxpayer> Taxpayers { get; set; }
+        public virtual ICollection<Employee> Employees { get; set; }
+
 
     }
 }

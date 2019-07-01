@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Taxes.Models.Municipality>
+﻿@model Taxes.Models.MunicipalitiesView
 
 @{
     ViewBag.Title = "Municipalities";
@@ -6,21 +6,43 @@
 
 <h2>Municipalities</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create", new { }, new { @class = "btn btn-primary"})
-</p>
+@using (Html.BeginForm())
+{
+    <table>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Department, htmlAttributes: new { @class = "control-label col-md-2" })
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Department, new { htmlAttributes = new { @class = "form-control" } })
+            </td>
+            <td>
+                @Html.LabelFor(model => model.Municipality, htmlAttributes: new { @class = "control-label col-md-2" })
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Municipality, new { htmlAttributes = new { @class = "form-control" } })
+            </td>
+            <td>
+                <input type="submit" value="Filter" class="btn btn-info" />
+                @Html.ActionLink("Create New", "Create", new { }, new { @class = "btn btn-primary" })
+            </td>
+        </tr>
+    </table>
+}
+<br />
+
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Department.Name)
+            @Html.DisplayNameFor(model => model.Municipalities.FirstOrDefault().Department.Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Municipalities.FirstOrDefault().Name)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in Model.Municipalities) {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Department.Name)

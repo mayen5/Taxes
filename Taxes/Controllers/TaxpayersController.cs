@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -55,7 +56,7 @@ namespace Taxes.Controllers
 
             if (taxpayer != null)
             {
-                
+
                 return View(taxpayer.Properties);
 
             }
@@ -193,10 +194,15 @@ namespace Taxes.Controllers
 
         // GET: Taxpayers
         [Authorize(Roles = "Admin")]
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            var taxpayers = db.Taxpayers.Include(t => t.Department).Include(t => t.DocumentType).Include(t => t.Municipality).Include(p => p.Properties).ToList();
-            return View(taxpayers.ToList());
+            page = (page ?? 1);
+
+            var taxpayers = db.Taxpayers
+                .OrderBy(tp => tp.LastName)
+                .ThenBy(tp => tp.FirstName);
+
+            return View(taxpayers.ToPagedList((int)page, 5));
         }
 
         // GET: Taxpayers/Details/5
